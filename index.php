@@ -1,3 +1,19 @@
+<?php
+/* For displaying errors....good practice while developing */
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL); 
+
+
+include("src/functions.php");
+$db = dbConnect();
+$neighborhoodThing = getNeighborhoods($db);
+$roomTypes = getRoomTypes($db);
+
+?>
+
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -42,20 +58,53 @@
 
     <div class="album py-5 bg-light">
         <div class="container">
-        <h1>a title:</h1>
+        <h1>Search For Rentals in Portland</h1>
+
+        <form method = "GET" action="results.php">
 
             <div class="row g-3 align-items-center">
                 <div class="col-auto">
-                    <label for="neighborhood" class="col-form-label">sample form element label</label>
+                    <label for="neighborhood" class="col-form-label">Neighborhood:</label>
+                    <select name="nid">
+                <?php
+                    echo "<option value = '0'>Any</option>";
+                    foreach($neighborhoodThing as $row){
+                    $id = $row["id"];
+                    $neighborhood = $row["neighborhood"];
+                    echo "<option value = '$id,$neighborhood'>$neighborhood</option>";
+                    }
+                ?>
+                </select>
                 </div>
 
                 <div class="col-auto">
-                        form element here
+                    <label for="roomType" class="col-form-label">Room Type:</label>
+                    <select name="roomType">
+                <?php
+                    echo "<option value = '0'>Any</option>";
+                    foreach($roomTypes as $row){
+                    $id = $row["id"];
+                    $type = $row["type"];
+                    echo "<option value = '$id,$type'>$type</option>";
+                    }
+                ?>
+                </select>
+                </div>           
+
+                <div class="col-auto">
+                <label for="numGuests" class="col-form-label">Number of Guests:</label>
+                    <select name="numGuests">
+                <?php
+                    for($i = 1; $i <=10; $i++){
+                    echo "<option value = '$i'>$i</option>";
+                    }
+                ?>   
+                </select>        
                 </div>
 
             </div><!-- row -->
 
-
+            <button  type='submit' class='btn btn-primary'>Submit</button>
         </div><!-- .container-->
     </div><!-- album-->
 
